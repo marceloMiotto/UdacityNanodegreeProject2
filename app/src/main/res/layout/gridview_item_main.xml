@@ -9,6 +9,7 @@
         android:id="@+id/imageView_gridView_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="fitCenter"
         />
 
 </RelativeLayout>

@@ -77,5 +77,7 @@
     <string name="pref_order_popular_value">popular</string>
     <string name="pref_order_rating_value">top_rated</string>
     <string name="listPreference_key">list_preference</string>
+    <string name="release_date">Release Date</string>
+    <string name="rating">Rating</string>
 
 </resources>
