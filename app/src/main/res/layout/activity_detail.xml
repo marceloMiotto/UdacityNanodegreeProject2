@@ -8,7 +8,7 @@
 
 
     <fragment
-        android:id="@+id/fragment_detail"
+        android:id="@+id/fragment_activity_detail"
         android:name="udacity.com.br.popularmovies.fragments.DetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

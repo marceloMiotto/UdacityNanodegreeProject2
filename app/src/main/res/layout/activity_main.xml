@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="udacity.com.br.popularmovies.MainActivity">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
 
     <fragment
-        android:id="@+id/fragment_main"
+        android:id="@+id/fragment_activity_main"
         android:name="udacity.com.br.popularmovies.fragments.MainFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/fragment_marginTop"
         android:layout_marginBottom="@dimen/fragment_marginTop"
-        />
+        android:layout_marginTop="@dimen/fragment_marginTop"
+        tools:visibility="invisible" />
 
-</FrameLayout>
+</merge>

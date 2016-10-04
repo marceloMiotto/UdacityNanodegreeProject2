@@ -2,7 +2,6 @@ package udacity.com.br.popularmovies.adapters;
 
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,16 +17,16 @@ import udacity.com.br.popularmovies.model.Movies;
 import udacity.com.br.popularmovies.util.Constant;
 
 public class MoviesAdapter extends BaseAdapter {
-    private Context mContext;
-    private int     mMoviesCount;
-    private List<Movies> mMovies;
+    private final Context mContext;
+    private final int     mMoviesCount;
+    private final List<Movies> mMovies;
 
-    public MoviesAdapter(Context c, int moviesCount, List<Movies> moviesArray) {
+    public MoviesAdapter(Context c,  int moviesCount, List<Movies> moviesArray) {
 
         mContext = c;
         mMoviesCount = moviesCount;
         mMovies      = moviesArray;
-        Log.d("Debug","Init Adapater Ok");
+
     }
 
     public Movies getMovie(int position){
@@ -62,15 +61,15 @@ public class MoviesAdapter extends BaseAdapter {
 
 
         if(mMovies!= null) {
-            Log.d("Debug", "img. " + mMovies.get(position).getMoviePoster());
             Picasso.with(mContext).load(Constant.TMDB_POSTER_THUMBNAIL_IMG + mMovies.get(position).getMoviePoster()).into(viewHolder.imageView);
         }
+
 
         return view;
     }
 
     private class ViewHolder{
-        private ImageView imageView;
+        private final ImageView imageView;
 
         public ViewHolder(View view){
             imageView = (ImageView) view.findViewById(R.id.imageView_gridView_item);

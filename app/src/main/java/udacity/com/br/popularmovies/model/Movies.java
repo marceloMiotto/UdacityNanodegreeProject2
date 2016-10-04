@@ -24,7 +24,7 @@ public class Movies implements Parcelable {
         this.mReleaseDate = releaseDate;
     }
 
-    public Movies(Parcel in) {
+    private Movies(Parcel in) {
         this.mMoviePosterThumbnail = in.readString();
         this.mOriginalTitle = in.readString();
         this.mMoviePoster = in.readString();

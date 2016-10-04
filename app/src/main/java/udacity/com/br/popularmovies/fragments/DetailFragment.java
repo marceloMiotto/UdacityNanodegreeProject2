@@ -22,12 +22,6 @@ import udacity.com.br.popularmovies.util.Constant;
  */
 public class DetailFragment extends Fragment {
 
-    TextView mOriginalTitle;
-    TextView mReleaseDate;
-    ImageView mPoster;
-    TextView mSynopsis;
-    RatingBar mUserRating;
-
 
     public DetailFragment() {
         // Required empty public constructor
@@ -39,11 +33,11 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
-        mOriginalTitle = (TextView) view.findViewById(R.id.textView_fdetail_original_title);
-        mReleaseDate   = (TextView) view.findViewById(R.id.textView_fdetail_release_date);
-        mPoster        = (ImageView) view.findViewById(R.id.imageView_fdetail_poster);
-        mSynopsis      = (TextView) view.findViewById(R.id.textView_fdetail_synopsis);
-        mUserRating    = (RatingBar) view.findViewById(R.id.ratingBar_fdetail_user_rating);
+        TextView mOriginalTitle = (TextView) view.findViewById(R.id.textView_fdetail_original_title);
+        TextView mReleaseDate = (TextView) view.findViewById(R.id.textView_fdetail_release_date);
+        ImageView mPoster = (ImageView) view.findViewById(R.id.imageView_fdetail_poster);
+        TextView mSynopsis = (TextView) view.findViewById(R.id.textView_fdetail_synopsis);
+        RatingBar mUserRating = (RatingBar) view.findViewById(R.id.ratingBar_fdetail_user_rating);
 
         Bundle bundle = getActivity().getIntent().getExtras();
         Movies movies = bundle.getParcelable(Constant.INTENT_MAIN_MOVIE);
@@ -55,7 +49,7 @@ public class DetailFragment extends Fragment {
             mSynopsis.setText(movies.getSynopsis());
 
             mUserRating.setMax(10);
-            mUserRating.setRating(Float.valueOf(movies.getUserRating()));
+            mUserRating.setRating(Float.valueOf(movies.getUserRating()) / 2);
 
             Picasso.with(getActivity()).load(Constant.TMDB_POSTER_IMG + movies.getMoviePoster()).into(mPoster);
         }

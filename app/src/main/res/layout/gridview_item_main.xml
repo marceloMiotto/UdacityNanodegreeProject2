@@ -1,15 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+
+
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/imageView_gridView_item"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:adjustViewBounds="true"
+    android:scaleType="centerCrop"
+    android:contentDescription="@string/imageView_content_gridView_movies"
+    />
 
-
-    <ImageView
-        android:id="@+id/imageView_gridView_item"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="fitCenter"
-        />
-
-</RelativeLayout>
