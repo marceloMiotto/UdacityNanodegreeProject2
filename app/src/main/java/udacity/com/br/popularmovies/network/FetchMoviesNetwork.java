@@ -18,7 +18,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -133,7 +134,17 @@ public class FetchMoviesNetwork {
 
     private String getReadableDateString(String time) {
 
-        return DateFormat.getDateInstance().format(time);
+        SimpleDateFormat fromDate = new SimpleDateFormat("yyyy-mm-dd");
+        SimpleDateFormat toDate   = new SimpleDateFormat("mm-dd-yyyy");
+
+        try{
+            return toDate.format(fromDate.parse(time));
+
+        }catch (ParseException e){
+            e.printStackTrace();
+            return "Error";
+        }
+
     }
 
     @SuppressWarnings("UnusedAssignment")
