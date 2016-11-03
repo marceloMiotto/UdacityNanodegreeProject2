@@ -5,4 +5,5 @@
     <dimen name="fragment_marginTop">5dp</dimen>
     <dimen name="lineraLayout_marginTop">20dp</dimen>
     <dimen name="gridView_margin">8dp</dimen>
+    <dimen name="item_trailer">16dp</dimen>
 </resources>

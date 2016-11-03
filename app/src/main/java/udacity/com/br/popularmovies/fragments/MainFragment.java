@@ -25,6 +25,7 @@ import udacity.com.br.popularmovies.R;
 import udacity.com.br.popularmovies.adapters.MoviesAdapter;
 import udacity.com.br.popularmovies.model.Movies;
 import udacity.com.br.popularmovies.network.FetchMoviesNetwork;
+import udacity.com.br.popularmovies.services.MoviesService;
 import udacity.com.br.popularmovies.util.Constant;
 
 
@@ -34,7 +35,7 @@ public class MainFragment extends Fragment {
     private MoviesAdapter mMoviesAdapter;
     private Movies movie;
     private TextView mNoConnectionMsg;
-
+    private String mPrefChoose;
 
 
     public MainFragment() {
@@ -80,20 +81,22 @@ public class MainFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        String prefChoose = getString(R.string.pref_order_movies_by_default);
+        mPrefChoose = getString(R.string.pref_order_movies_by_default);
 
         switch (id){
             case R.id.action_most_popular:
-                prefChoose = getString(R.string.pref_order_popular_value);
+                mPrefChoose = getString(R.string.pref_order_popular_value);
                 break;
             case R.id.action_top_rated:
-                prefChoose = getString(R.string.pref_order_rating_value);
+                mPrefChoose = getString(R.string.pref_order_rating_value);
                 break;
+            case R.id.action_favorite:
+                mPrefChoose = getString(R.string.pref_order_favorite);
         }
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(getActivity().getString(R.string.pref_file_key),Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(getString(R.string.pref_order_movies_by_key) , prefChoose);
+        editor.putString(getString(R.string.pref_order_movies_by_key) , mPrefChoose);
         editor.apply();
 
         updateMovies();
@@ -139,7 +142,7 @@ public class MainFragment extends Fragment {
 
             } else {
                 mNoConnectionMsg.setVisibility(View.GONE);
-                mMoviesAdapter = new MoviesAdapter(mContext, 20, movies);
+                mMoviesAdapter = new MoviesAdapter(mContext, 20, movies,mPrefChoose);
                 mMoviesAdapter.notifyDataSetChanged();
                 mPostersGridView.setAdapter(mMoviesAdapter);
             }
@@ -149,8 +152,18 @@ public class MainFragment extends Fragment {
 
         @Override
         protected List<Movies> doInBackground(String... params) {
-            FetchMoviesNetwork fetchMoviesNetwork = new FetchMoviesNetwork(getActivity());
-            return fetchMoviesNetwork.getMoviesList();
+
+            if(mPrefChoose.equals(getString(R.string.pref_order_favorite))){
+                //TODO get the movies from DB
+                MoviesService moviesService = new MoviesService(getActivity());
+                return moviesService.getMovies();
+
+            }else{
+                FetchMoviesNetwork fetchMoviesNetwork = new FetchMoviesNetwork(getActivity());
+                return fetchMoviesNetwork.getMoviesList();
+            }
+
+
         }
     }
 

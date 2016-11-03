@@ -17,5 +17,9 @@
     <string name="no_connections">Sorry :-(  \n \n No connections available!</string>
     <string name="imageView_content_gridView_movies">Grid View with movie posters</string>
     <string name="imageView_content_fdetail_movie_poster">Movie Poster</string>
+    <string name="action_favorite">Favorite</string>
+    <string name="pref_order_favorite">pref_order_favorite</string>
+    <string name="trailers">Trailers</string>
+    <string name="reviews">Reviews</string>
 
 </resources>

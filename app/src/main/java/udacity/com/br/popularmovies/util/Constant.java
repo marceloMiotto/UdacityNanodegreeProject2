@@ -21,6 +21,11 @@ public interface Constant {
     String TMDB_USER_RATING = "vote_average";
     String TMDB_SYNOPSIS = "overview";
 
+    String TMDB_NAME = "name";
+    String TMDB_KEY  = "key";
+    String TMDB_AUTHOR = "author";
+    String TMDB_CONTENT = "content";
+
 
     //poster path
     String TMDB_POSTER_THUMBNAIL_IMG = "http://image.tmdb.org/t/p/w185//";

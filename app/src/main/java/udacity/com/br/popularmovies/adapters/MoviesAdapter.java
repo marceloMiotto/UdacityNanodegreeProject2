@@ -15,17 +15,20 @@ import java.util.List;
 import udacity.com.br.popularmovies.R;
 import udacity.com.br.popularmovies.model.Movies;
 import udacity.com.br.popularmovies.util.Constant;
+import udacity.com.br.popularmovies.util.Utility;
 
 public class MoviesAdapter extends BaseAdapter {
     private final Context mContext;
     private final int     mMoviesCount;
     private final List<Movies> mMovies;
+    private final String mChooseType;
 
-    public MoviesAdapter(Context c,  int moviesCount, List<Movies> moviesArray) {
+    public MoviesAdapter(Context c,  int moviesCount, List<Movies> moviesArray, String chooseType) {
 
         mContext = c;
         mMoviesCount = moviesCount;
         mMovies      = moviesArray;
+        mChooseType  = chooseType;
 
     }
 
@@ -60,10 +63,16 @@ public class MoviesAdapter extends BaseAdapter {
         }
 
 
-        if(mMovies!= null) {
-            Picasso.with(mContext).load(Constant.TMDB_POSTER_THUMBNAIL_IMG + mMovies.get(position).getMoviePoster()).into(viewHolder.imageView);
-        }
+        if (mMovies != null) {
+            if (mChooseType.equals(mContext.getString(R.string.pref_order_favorite))) {
 
+                viewHolder.imageView.setImageBitmap(Utility.getImage(mMovies.get(position).getPosterImage()));
+
+            } else {
+
+                Picasso.with(mContext).load(Constant.TMDB_POSTER_THUMBNAIL_IMG + mMovies.get(position).getMoviePoster()).into(viewHolder.imageView);
+            }
+        }
 
         return view;
     }

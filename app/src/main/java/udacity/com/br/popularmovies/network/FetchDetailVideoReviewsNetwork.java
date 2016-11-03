@@ -1,8 +1,8 @@
 package udacity.com.br.popularmovies.network;
 
+
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -18,27 +18,26 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 import udacity.com.br.popularmovies.BuildConfig;
 import udacity.com.br.popularmovies.R;
-import udacity.com.br.popularmovies.model.Movies;
+import udacity.com.br.popularmovies.model.Reviews;
+import udacity.com.br.popularmovies.model.Trailers;
 import udacity.com.br.popularmovies.util.Constant;
 
+public class FetchDetailVideoReviewsNetwork {
 
-public class FetchMoviesNetwork {
-
-    private final String LOG_TAG = FetchMoviesNetwork.class.getSimpleName();
+    private final String LOG_TAG = FetchDetailVideoReviewsNetwork.class.getSimpleName();
 
     private Context mContext;
 
-    private FetchMoviesNetwork() {
+
+    private FetchDetailVideoReviewsNetwork() {
     }
 
-    public FetchMoviesNetwork(Context context) {
+    public FetchDetailVideoReviewsNetwork(Context context) {
         this.mContext = context;
 
     }
@@ -50,21 +49,46 @@ public class FetchMoviesNetwork {
     }
 
 
-    public List<Movies> getMoviesList() {
+    public List<Trailers> getTrailers(String movieId) {
+
+        try {
+            String trailers = getDetailVideoReviewList(movieId, "videos");
+
+            return getTrailersDataFromJson(trailers);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    public List<Reviews> getReviews(String movieId) {
+
+        String reviews = getDetailVideoReviewList(movieId, "reviews");
+        try {
+
+            return getReviewsDataFromJson(reviews);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+
+    }
+
+    public String getDetailVideoReviewList(String movieId, String videoReviewType) {
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
-        String moviesJsonStr = null;
+        String videoReviewJsonStr = null;
 
 
-        if(isConnected()){
+        if (isConnected()) {
 
             try {
-
-                SharedPreferences sharedPrefs = mContext.getSharedPreferences(mContext.getString(R.string.pref_file_key), Context.MODE_PRIVATE);
-                String orderMoviesBy = sharedPrefs.getString(
-                        mContext.getString(R.string.pref_order_movies_by_key),
-                        mContext.getString(R.string.pref_order_movies_by_default));
 
 
                 Uri.Builder builder = new Uri.Builder();
@@ -72,8 +96,8 @@ public class FetchMoviesNetwork {
                         .authority(Constant.MOVIE_AUTHORITY)
                         .appendPath(Constant.LEVEL_PATH)
                         .appendPath(Constant.DATA_PATH)
-                        .appendPath(orderMoviesBy)
-                        .appendQueryParameter(Constant.PAGE_PARAM, "1")
+                        .appendPath(movieId)
+                        .appendPath(videoReviewType)
                         .appendQueryParameter(Constant.API_KEY_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY);
 
 
@@ -87,7 +111,7 @@ public class FetchMoviesNetwork {
                 StringBuilder buffer = new StringBuilder();
                 if (inputStream == null) {
                     // Nothing to do.
-                    moviesJsonStr = null;
+                    videoReviewJsonStr = null;
                 }
                 assert inputStream != null;
                 reader = new BufferedReader(new InputStreamReader(inputStream));
@@ -99,13 +123,13 @@ public class FetchMoviesNetwork {
 
                 if (buffer.length() == 0) {
                     // Stream was empty.  No point in parsing.
-                    moviesJsonStr = null;
+                    videoReviewJsonStr = null;
                 }
-                moviesJsonStr = buffer.toString();
-                Log.v(LOG_TAG, moviesJsonStr);
+                videoReviewJsonStr = buffer.toString();
+                Log.v(LOG_TAG, videoReviewJsonStr);
 
             } catch (IOException e) {
-                moviesJsonStr = null;
+                videoReviewJsonStr = null;
             } finally {
                 if (urlConnection != null) {
                     urlConnection.disconnect();
@@ -114,66 +138,73 @@ public class FetchMoviesNetwork {
                     try {
                         reader.close();
                     } catch (final IOException e) {
-                        moviesJsonStr = null;
+                        videoReviewJsonStr = null;
                     }
                 }
 
             }
 
-            try {
-                return getMoviesDataFromJson(moviesJsonStr);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            return videoReviewJsonStr;
 
-        }else{
+        } else {
             return null;
         }
-        return null;
-    }
-
-    private String getReadableDateString(String time) {
-
-        SimpleDateFormat fromDate = new SimpleDateFormat("yyyy-mm-dd");
-        SimpleDateFormat toDate   = new SimpleDateFormat("mm-dd-yyyy");
-
-        try{
-            return toDate.format(fromDate.parse(time));
-
-        }catch (ParseException e){
-            e.printStackTrace();
-            return "Error";
-        }
 
     }
+
 
     @SuppressWarnings("UnusedAssignment")
-    private List<Movies> getMoviesDataFromJson(String moviesJsonStr)
+    private List<Trailers> getTrailersDataFromJson(String detailJsonStr)
             throws JSONException {
 
-        List<Movies> mMoviesList = new ArrayList<>();
-        JSONObject moviesJson = new JSONObject(moviesJsonStr);
-        JSONArray moviesArray = moviesJson.getJSONArray(Constant.TMDB_RESULTS);
+        List<Trailers> mTrailers = new ArrayList<>();
+
+        JSONObject moviesJson = new JSONObject(detailJsonStr);
+
+        JSONArray detailsArray = moviesJson.getJSONArray(Constant.TMDB_RESULTS);
 
 
-        for (int i = 0; i < moviesArray.length(); i++) {
+        for (int i = 0; i < detailsArray.length(); i++) {
 
-            JSONObject movies = moviesArray.getJSONObject(i);
+            JSONObject details = detailsArray.getJSONObject(i);
 
-            String movieOriginalTitle = movies.getString(Constant.TMDB_ORIGINAL_TITLE);
-            String moviePosterPath    = movies.getString(Constant.TMDB_POSTER_PATH);
-            String movieReleaseDate   = getReadableDateString(movies.getString(Constant.TMDB_RELEASE_DATE));
-            String movieId            = movies.getString(Constant.TMDB_ID);
-            String movieUserRating    = movies.getString(Constant.TMDB_USER_RATING);
-            String movieSynopsis      = movies.getString(Constant.TMDB_SYNOPSIS);
+            String name = details.getString(Constant.TMDB_NAME);
+            String key = details.getString(Constant.TMDB_KEY);
 
-            mMoviesList.add(new Movies(moviePosterPath,movieOriginalTitle, moviePosterPath, movieSynopsis, movieUserRating, movieReleaseDate,Long.valueOf(movieId)));
+            mTrailers.add(new Trailers(name, key));
 
         }
 
-        return mMoviesList;
+        return mTrailers;
 
     }
 
 
+    @SuppressWarnings("UnusedAssignment")
+    private List<Reviews> getReviewsDataFromJson(String detailJsonStr)
+            throws JSONException {
+
+        List<Reviews> mReviews = new ArrayList<>();
+
+        JSONObject moviesJson = new JSONObject(detailJsonStr);
+
+        JSONArray detailsArray = moviesJson.getJSONArray(Constant.TMDB_RESULTS);
+
+
+        for (int i = 0; i < detailsArray.length(); i++) {
+
+            JSONObject details = detailsArray.getJSONObject(i);
+
+            String author = details.getString(Constant.TMDB_AUTHOR);
+            String content = details.getString(Constant.TMDB_CONTENT);
+
+            mReviews.add(new Reviews(author, content));
+
+        }
+
+        return mReviews;
+
+    }
+
 }
+

@@ -11,17 +11,22 @@ public class Movies implements Parcelable {
     private String mSynopsis;
     private String mUserRating;
     private String mReleaseDate;
+    private long   mId;
+    private byte[] mPosterImage;
 
     public Movies() {
     }
 
-    public Movies(String moviePosterThumbnail, String originalTitle, String moviePoster, String synopsis, String userRating, String releaseDate) {
+    public Movies(String moviePosterThumbnail, String originalTitle, String moviePoster, String synopsis, String userRating, String releaseDate,long id, byte[] posterImage) {
         this.mMoviePosterThumbnail = moviePosterThumbnail;
         this.mOriginalTitle = originalTitle;
         this.mMoviePoster = moviePoster;
         this.mSynopsis = synopsis;
         this.mUserRating = userRating;
         this.mReleaseDate = releaseDate;
+        this.mId          = id;
+        this.mPosterImage = posterImage;
+
     }
 
     private Movies(Parcel in) {
@@ -31,6 +36,9 @@ public class Movies implements Parcelable {
         this.mSynopsis = in.readString();
         this.mUserRating = in.readString();
         this.mReleaseDate = in.readString();
+        this.mId          = in.readLong();
+        this.mPosterImage = in.createByteArray();
+
     }
 
     @Override
@@ -47,6 +55,9 @@ public class Movies implements Parcelable {
         dest.writeString(mSynopsis);
         dest.writeString(mUserRating);
         dest.writeString(mReleaseDate);
+        dest.writeLong(mId);
+        dest.writeByteArray(mPosterImage);
+
 
     }
 
@@ -68,6 +79,19 @@ public class Movies implements Parcelable {
 
     public void setMoviePosterThumbnail(String mMoviePosterThumbnail) {
         this.mMoviePosterThumbnail = mMoviePosterThumbnail;
+    }
+
+
+    public byte[] getPosterImage(){
+        return this.mPosterImage;
+    }
+
+    public long getId(){
+        return this.mId;
+    }
+
+    public void setId(long id){
+        this.mId = id;
     }
 
     public String getOriginalTitle() {

@@ -2,15 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="none"
-    >
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:context=".fragments.DetailFragment"
-        >
+        tools:context=".fragments.DetailFragment">
 
 
         <TextView
@@ -18,28 +16,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            tools:text="test"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            />
+            tools:text="test" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/lineraLayout_marginTop"
-            >
+            android:layout_marginTop="@dimen/lineraLayout_marginTop">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                >
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/imageView_fdetail_poster"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_launcher"
                     android:contentDescription="@string/imageView_content_fdetail_movie_poster"
-                    />
+                    android:src="@mipmap/ic_launcher" />
 
             </LinearLayout>
 
@@ -47,23 +41,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/release_date"
-                    android:textAppearance="?android:attr/textAppearanceMedium"
-                    />
+                    android:textAppearance="?android:attr/textAppearanceMedium" />
 
                 <TextView
                     android:id="@+id/textView_fdetail_release_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="test"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    />
+                    tools:text="test" />
 
 
             </LinearLayout>
@@ -75,15 +66,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="@string/rating"
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            />
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <RatingBar
             android:id="@+id/ratingBar_fdetail_user_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:numStars="5"
             android:isIndicator="true"
+            android:numStars="5"
 
             />
 
@@ -92,9 +82,39 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            tools:text="test"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            />
+            tools:text="test" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/trailers"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <include layout="@layout/activity_detail_trailer_recycler_view" />
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="@string/reviews"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <include layout="@layout/activity_detail_reviews_recycler_view" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right|end"
+            android:clickable="true"
+            android:elevation="8dp"
+            android:src="@drawable/starRemove" />
 
     </LinearLayout>
+
+
 </ScrollView>

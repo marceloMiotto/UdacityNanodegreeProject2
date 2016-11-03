@@ -1,0 +1,23 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:padding="@dimen/item_trailer">
+
+
+
+<Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/button_border"
+    android:drawableLeft="@drawable/youtube_play"
+    tools:drawableLeft="@drawable/youtube_play"
+    android:text="Test"
+    android:singleLine="true"
+    android:padding="@dimen/item_trailer"
+    android:textAppearance="?android:attr/textAppearanceLarge"
+    />
+
+
+</LinearLayout>
