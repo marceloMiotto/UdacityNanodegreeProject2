@@ -15,6 +15,7 @@ import com.squareup.picasso.Picasso;
 import udacity.com.br.popularmovies.R;
 import udacity.com.br.popularmovies.model.Movies;
 import udacity.com.br.popularmovies.util.Constant;
+import udacity.com.br.popularmovies.util.Utility;
 
 
 /**
@@ -41,6 +42,7 @@ public class DetailFragment extends Fragment {
 
         Bundle bundle = getActivity().getIntent().getExtras();
         Movies movies = bundle.getParcelable(Constant.INTENT_MAIN_MOVIE);
+        String menuChoose = getActivity().getIntent().getStringExtra(Constant.INTENT_MENU_CHOOSE);
 
         if (movies != null) {
 
@@ -51,7 +53,12 @@ public class DetailFragment extends Fragment {
             mUserRating.setMax(10);
             mUserRating.setRating(Float.valueOf(movies.getUserRating()) / 2);
 
-            Picasso.with(getActivity()).load(Constant.TMDB_POSTER_IMG + movies.getMoviePoster()).into(mPoster);
+            if(menuChoose.equals(getActivity().getString(R.string.action_favorite))){
+                mPoster.setImageBitmap(Utility.getImage(movies.getPosterImage()));
+            }else{
+                Picasso.with(getActivity()).load(Constant.TMDB_POSTER_IMG + movies.getMoviePoster()).into(mPoster);
+            }
+
         }
 
         return view;

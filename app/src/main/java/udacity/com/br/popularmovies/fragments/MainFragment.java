@@ -63,6 +63,7 @@ public class MainFragment extends Fragment {
 
                 Intent intent = new Intent(getActivity(), DetailActivity.class);
                 intent.putExtra(Constant.INTENT_MAIN_MOVIE,movie);
+                intent.putExtra(Constant.INTENT_MENU_CHOOSE,mPrefChoose);
                 startActivity(intent);
             }
         });

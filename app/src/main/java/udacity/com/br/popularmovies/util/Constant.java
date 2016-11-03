@@ -33,5 +33,6 @@ public interface Constant {
 
     //intents
     String INTENT_MAIN_MOVIE = "main movie";
+    String INTENT_MENU_CHOOSE = "menu_choose";
 
 }
