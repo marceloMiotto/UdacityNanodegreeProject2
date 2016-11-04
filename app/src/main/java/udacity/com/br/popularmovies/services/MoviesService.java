@@ -35,16 +35,18 @@ public class MoviesService {
                 null,
                 null);
 
-        movieCursor.moveToFirst();
-        if (movieCursor.getCount() != 0) {
-            do {
-                movies.add(new Movies(null, movieCursor.getString(1), null, movieCursor.getString(4), movieCursor.getString(3),movieCursor.getString(2),movieCursor.getLong(0),movieCursor.getBlob(5)));
+        if(movieCursor!=null) {
+            movieCursor.moveToFirst();
+            if (movieCursor.getCount() != 0) {
+                do {
+                    movies.add(new Movies(null, movieCursor.getString(1), null, movieCursor.getString(4), movieCursor.getString(3), movieCursor.getString(2), movieCursor.getLong(0), movieCursor.getBlob(5)));
 
-            } while (movieCursor.moveToNext());
+                } while (movieCursor.moveToNext());
 
+            }
+            movieCursor.close();
         }
 
-        movieCursor.close();
 
         return movies;
 

@@ -47,14 +47,12 @@ public class DataObjectHolder extends RecyclerView.ViewHolder  {
                                                int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_review_fragment_detail, parent, false);
         return new DataObjectHolder(view);
-
     }
 
     @Override
     public void onBindViewHolder(DataObjectHolder holder, int position) {
         holder.reviewName.setText(String.format(mContext.getString(R.string.name_review_item), mReviews.get(position).getAuthor()));
         holder.reviewContent.setText(mReviews.get(position).getContent());
-
     }
 
 

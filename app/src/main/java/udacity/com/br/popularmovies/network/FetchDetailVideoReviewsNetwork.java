@@ -54,6 +54,7 @@ public class FetchDetailVideoReviewsNetwork {
         try {
             String trailers = getDetailVideoReviewList(movieId, "videos");
 
+            Log.e("Debug2","trailers: "+trailers);
             return getTrailersDataFromJson(trailers);
 
         } catch (JSONException e) {
@@ -100,6 +101,7 @@ public class FetchDetailVideoReviewsNetwork {
                         .appendPath(videoReviewType)
                         .appendQueryParameter(Constant.API_KEY_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY);
 
+                Log.e("Debug2","link "+builder.build().toString());
 
                 URL url = new URL(builder.build().toString());
                 urlConnection = (HttpURLConnection) url.openConnection();

@@ -68,6 +68,7 @@ public class MainFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
@@ -130,6 +131,10 @@ public class MainFragment extends Fragment {
 
         public FetchMoviesTask(Context context) {
             this.mContext = context;
+            SharedPreferences sharedPrefs = getActivity().getSharedPreferences(getActivity().getString(R.string.pref_file_key), Context.MODE_PRIVATE);
+            mPrefChoose = sharedPrefs.getString(
+                    getActivity().getString(R.string.pref_order_movies_by_key),
+                    getActivity().getString(R.string.pref_order_movies_by_default));
         }
 
 
@@ -154,8 +159,8 @@ public class MainFragment extends Fragment {
         @Override
         protected List<Movies> doInBackground(String... params) {
 
-            if(mPrefChoose.equals(getString(R.string.pref_order_favorite))){
-                //TODO get the movies from DB
+            //TODO remove condition
+            if(mPrefChoose.equals(getString(R.string.pref_order_favorite)) && 1==2){
                 MoviesService moviesService = new MoviesService(getActivity());
                 return moviesService.getMovies();
 

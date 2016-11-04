@@ -4,14 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/fragment_padding"
-    tools:context="udacity.com.br.popularmovies.DetailActivity">
-
+    >
 
     <fragment
         android:id="@+id/fragment_activity_detail"
         android:name="udacity.com.br.popularmovies.fragments.DetailFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        android:layout="@layout/fragment_detail"
+        tools:layout="@layout/fragment_detail" />
+
 
 </RelativeLayout>

@@ -2,6 +2,8 @@ package udacity.com.br.popularmovies.fragments;
 
 
 import android.os.Bundle;
+import android.os.StrictMode;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -69,6 +72,8 @@ public class DetailFragment extends Fragment {
 
         }
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         FetchDetailVideoReviewsNetwork fetchDetail = new FetchDetailVideoReviewsNetwork(getActivity());
 
@@ -86,6 +91,16 @@ public class DetailFragment extends Fragment {
 
         mReviewAdapter = new ReviewsAdapter(getActivity(),fetchDetail.getReviews(String.valueOf(movies.getId())));
         rvs.setAdapter(mReviewAdapter);
+
+
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(),"Test",Toast.LENGTH_SHORT).show();
+            }
+
+        });
 
         return view;
 

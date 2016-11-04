@@ -46,7 +46,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.DataOb
     @Override
     public DataObjectHolder onCreateViewHolder(ViewGroup parent,
                                                int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_review_fragment_detail, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_trailer_fragment_detail, parent, false);
         return new DataObjectHolder(view);
 
     }
