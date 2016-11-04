@@ -21,5 +21,6 @@
     <string name="pref_order_favorite">pref_order_favorite</string>
     <string name="trailers">Trailers</string>
     <string name="reviews">Reviews</string>
+    <string name="name_review_item">Name: %1$s</string>
 
 </resources>

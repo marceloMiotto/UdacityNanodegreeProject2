@@ -3,6 +3,8 @@ package udacity.com.br.popularmovies.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +15,10 @@ import android.widget.TextView;
 import com.squareup.picasso.Picasso;
 
 import udacity.com.br.popularmovies.R;
+import udacity.com.br.popularmovies.adapters.ReviewsAdapter;
+import udacity.com.br.popularmovies.adapters.TrailersAdapter;
 import udacity.com.br.popularmovies.model.Movies;
+import udacity.com.br.popularmovies.network.FetchDetailVideoReviewsNetwork;
 import udacity.com.br.popularmovies.util.Constant;
 import udacity.com.br.popularmovies.util.Utility;
 
@@ -23,6 +28,9 @@ import udacity.com.br.popularmovies.util.Utility;
  */
 public class DetailFragment extends Fragment {
 
+
+    private RecyclerView.Adapter mTrailerAdapter;
+    private RecyclerView.Adapter mReviewAdapter;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -60,6 +68,24 @@ public class DetailFragment extends Fragment {
             }
 
         }
+
+
+        FetchDetailVideoReviewsNetwork fetchDetail = new FetchDetailVideoReviewsNetwork(getActivity());
+
+        RecyclerView rv = (RecyclerView) view.findViewById(R.id.trailer_container_recycler_view);
+        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rv.setHasFixedSize(true);
+
+
+        mTrailerAdapter = new TrailersAdapter(getActivity(),fetchDetail.getTrailers(String.valueOf(movies.getId())));
+        rv.setAdapter(mTrailerAdapter);
+
+        RecyclerView rvs = (RecyclerView) view.findViewById(R.id.review_container_recycler_view);
+        rvs.setLayoutManager(new LinearLayoutManager(getActivity()));
+        rvs.setHasFixedSize(true);
+
+        mReviewAdapter = new ReviewsAdapter(getActivity(),fetchDetail.getReviews(String.valueOf(movies.getId())));
+        rvs.setAdapter(mReviewAdapter);
 
         return view;
 

@@ -10,6 +10,7 @@
 <Button
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:id="@+id/trailer_item_button"
     android:background="@drawable/button_border"
     android:drawableLeft="@drawable/youtube_play"
     tools:drawableLeft="@drawable/youtube_play"
