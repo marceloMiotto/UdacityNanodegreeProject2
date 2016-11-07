@@ -28,9 +28,11 @@ import java.util.List;
 import udacity.com.br.popularmovies.R;
 import udacity.com.br.popularmovies.adapters.ReviewsAdapter;
 import udacity.com.br.popularmovies.adapters.TrailersAdapter;
+import udacity.com.br.popularmovies.data.PopularMoviesContract;
 import udacity.com.br.popularmovies.model.Movies;
 import udacity.com.br.popularmovies.model.Trailers;
 import udacity.com.br.popularmovies.network.FetchDetailVideoReviewsNetwork;
+import udacity.com.br.popularmovies.services.MoviesService;
 import udacity.com.br.popularmovies.util.Constant;
 import udacity.com.br.popularmovies.util.Utility;
 
@@ -45,6 +47,8 @@ public class DetailFragment extends Fragment {
     private RecyclerView.Adapter mReviewAdapter;
     private ShareActionProvider mShareActionProvider;
     private List<Trailers> mTrailers;
+    private String mMenuChoose;
+    private Movies movies;
 
     public DetailFragment() {
         // Required empty public constructor
@@ -74,8 +78,8 @@ public class DetailFragment extends Fragment {
         setHasOptionsMenu(true);
 
         Bundle bundle = getActivity().getIntent().getExtras();
-        Movies movies = bundle.getParcelable(Constant.INTENT_MAIN_MOVIE);
-        String menuChoose = getActivity().getIntent().getStringExtra(Constant.INTENT_MENU_CHOOSE);
+        movies = bundle.getParcelable(Constant.INTENT_MAIN_MOVIE);
+        mMenuChoose = getActivity().getIntent().getStringExtra(Constant.INTENT_MENU_CHOOSE);
 
         if (movies != null) {
 
@@ -86,7 +90,7 @@ public class DetailFragment extends Fragment {
             mUserRating.setMax(10);
             mUserRating.setRating(Float.valueOf(movies.getUserRating()) / 2);
 
-            if(menuChoose.equals(getActivity().getString(R.string.action_favorite))){
+            if(mMenuChoose.equals(getActivity().getString(R.string.action_favorite))){
                 mPoster.setImageBitmap(Utility.getImage(movies.getPosterImage()));
             }else{
                 Picasso.with(getActivity()).load(Constant.TMDB_POSTER_IMG + movies.getMoviePoster()).into(mPoster);
@@ -121,10 +125,35 @@ public class DetailFragment extends Fragment {
 
 
         FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        if(mMenuChoose.equals(getActivity().getString(R.string.action_favorite))){
+           fab.setImageResource(R.drawable.star_remove);
+        }else{
+            fab.setImageResource(R.drawable.star_add);
+        }
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(),"Test",Toast.LENGTH_SHORT).show();
+                long result;
+                MoviesService moviesService = new MoviesService(getActivity());
+
+                if(mMenuChoose.equals(getActivity().getString(R.string.action_favorite))){
+                   //Remove
+                    result = moviesService.removeMovieFromFavorite(getActivity(),PopularMoviesContract.MovieEntry._ID +" = ?",new String[]{String.valueOf(movies.getId())});
+
+                }else{
+                   //Add
+                    result = moviesService.addMovieToFavorite(getActivity(),movies);
+
+                }
+
+
+                if(result < 0) {
+                    Toast.makeText(getActivity(), R.string.msg_favorite_already, Toast.LENGTH_SHORT).show();
+                } else if(result == 0){
+                    Toast.makeText(getActivity(), R.string.msg_error_saving_to_favorite, Toast.LENGTH_SHORT).show();
+                }else{
+                    Toast.makeText(getActivity(), R.string.msg_saved_to_favorite, Toast.LENGTH_SHORT).show();
+                }
             }
 
         });

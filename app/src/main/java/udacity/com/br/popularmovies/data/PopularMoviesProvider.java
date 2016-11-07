@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import udacity.com.br.popularmovies.data.PopularMoviesContract.MovieEntry;
 
@@ -31,6 +32,8 @@ public class PopularMoviesProvider extends ContentProvider {
     private static final String sMoviesByIdSelection =
             MovieEntry.TABLE_NAME+
                     "." + MovieEntry._ID + " = ? ";
+
+    private SQLiteDatabase sqLiteDatabase;
 
 
     private Cursor getMovies(Uri uri,String sortOrder) {
@@ -70,13 +73,44 @@ public class PopularMoviesProvider extends ContentProvider {
     @Override
     public boolean onCreate() {
         mOpenHelper = new PopularMoviesDbHelper(getContext());
+        if(sqLiteDatabase == null) {
+            sqLiteDatabase = mOpenHelper.getWritableDatabase();
+        }
         return true;
+    }
+
+    private Cursor getMovies(String[] projection, String selection, String[] selectionArgs, String sortOrder){
+
+        Cursor moviesCursor = sMoviesQueryBuilder.query(sqLiteDatabase,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder);
+
+        return moviesCursor;
     }
 
     @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        return null;
+        Cursor retCursor;
+        switch (sUriMatcher.match(uri)) {
+
+            case MOVIES: {
+                Log.e("Debug2","Debug07 "+projection.toString());
+
+                retCursor = getMovies(projection, selection, selectionArgs, sortOrder);
+                Log.e("Debug2","Debug08 "+retCursor.getCount());
+                break;
+            }
+
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+        }
+        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        return retCursor;
     }
 
 
@@ -91,6 +125,7 @@ public class PopularMoviesProvider extends ContentProvider {
             case MOVIES_WITH_ID:
                 return MovieEntry.CONTENT_ITEM_TYPE;
             default:
+
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
@@ -108,7 +143,7 @@ public class PopularMoviesProvider extends ContentProvider {
                 if ( _id > 0 )
                     returnUri = MovieEntry.buildMoviesUri(_id);
                 else
-                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                    throw new android.database.SQLException("Failed to insert row into " + uri );
                 break;
             }
             default:

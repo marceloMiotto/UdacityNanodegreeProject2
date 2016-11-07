@@ -23,5 +23,9 @@
     <string name="reviews">Reviews</string>
     <string name="name_review_item">Name: %1$s</string>
     <string name="action_share">Share</string>
+    <string name="msg_save_to_favorite">Saved to Favorite</string>
+    <string name="msg_error_saving_to_favorite">Error Adding to Favorite</string>
+    <string name="msg_saved_to_favorite">Saved to Favorite</string>
+    <string name="msg_favorite_already">This movie is at Favorites</string>
 
 </resources>

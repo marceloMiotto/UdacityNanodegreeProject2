@@ -1,8 +1,11 @@
 package udacity.com.br.popularmovies.services;
 
 
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import java.util.ArrayList;
 
@@ -50,6 +53,59 @@ public class MoviesService {
 
         return movies;
 
+    }
+
+
+
+    public int removeMovieFromFavorite(Context context,String projection, String[] projectionArgs){
+
+        int movieRemoved = context.getContentResolver().delete(
+                MovieEntry.CONTENT_URI,
+                projection,
+                projectionArgs
+        );
+        return movieRemoved;
+    }
+
+    public long addMovieToFavorite(Context context, Movies movie) {
+
+
+        long movieId = 0;
+
+        Cursor movieCursor = context.getContentResolver().query(
+                MovieEntry.CONTENT_URI,
+                new String[]{MovieEntry._ID},
+                MovieEntry.COLUMN_MOVIE_TITLE + " = ?",
+                new String[]{movie.getOriginalTitle()},
+                null);
+
+
+        if (movieCursor != null && movieCursor.getCount() > 0) {
+            movieCursor.close();
+            return -1;
+
+        }else {
+
+            ContentValues movieValues = new ContentValues();
+
+            movieValues.put(MovieEntry.COLUMN_MOVIE_TITLE, movie.getOriginalTitle());
+            movieValues.put(MovieEntry.COLUMN_MOVIE_RELEASE_DATE, movie.getReleaseDate());
+            movieValues.put(MovieEntry.COLUMN_MOVIE_RATING, movie.getUserRating());
+            movieValues.put(MovieEntry.COLUMN_MOVIE_REVIEW, movie.getSynopsis());
+            movieValues.put(MovieEntry.COLUMN_MOVIE_POSTER, movie.getPosterImage());
+
+            Uri insertedUri = context.getContentResolver().insert(
+                    MovieEntry.CONTENT_URI,
+                    movieValues
+            );
+
+
+            movieId = ContentUris.parseId(insertedUri);
+
+        }
+
+
+        return movieId;
     }
 
 

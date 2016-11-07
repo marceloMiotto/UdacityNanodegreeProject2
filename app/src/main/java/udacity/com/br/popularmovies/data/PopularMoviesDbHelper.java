@@ -22,11 +22,11 @@ public class PopularMoviesDbHelper extends SQLiteOpenHelper {
 
         final String SQL_CREATE_FAVORITE_MOVIES_TABLE = "CREATE TABLE " + MovieEntry.TABLE_NAME + " (" +
                 MovieEntry._ID + " INTEGER PRIMARY KEY," +
-                MovieEntry.COLUMN_MOVIE_TITLE + " TEXT UNIQUE NOT NULL, " +
+                MovieEntry.COLUMN_MOVIE_TITLE + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_MOVIE_RELEASE_DATE + " TEXT NOT NULL, " +
                 MovieEntry.COLUMN_MOVIE_RATING + " REAL NOT NULL, " +
-                MovieEntry.COLUMN_MOVIE_REVIEW + " TEXT NOT NULL " +
-                MovieEntry.COLUMN_MOVIE_REVIEW + " BLOB " +
+                MovieEntry.COLUMN_MOVIE_REVIEW + " TEXT NOT NULL, " +
+                MovieEntry.COLUMN_MOVIE_POSTER + " BLOB " +
                 " );";
 
         sqLiteDatabase.execSQL(SQL_CREATE_FAVORITE_MOVIES_TABLE);
