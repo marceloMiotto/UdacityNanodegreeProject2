@@ -1,13 +1,19 @@
 package udacity.com.br.popularmovies.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -17,10 +23,13 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.List;
+
 import udacity.com.br.popularmovies.R;
 import udacity.com.br.popularmovies.adapters.ReviewsAdapter;
 import udacity.com.br.popularmovies.adapters.TrailersAdapter;
 import udacity.com.br.popularmovies.model.Movies;
+import udacity.com.br.popularmovies.model.Trailers;
 import udacity.com.br.popularmovies.network.FetchDetailVideoReviewsNetwork;
 import udacity.com.br.popularmovies.util.Constant;
 import udacity.com.br.popularmovies.util.Utility;
@@ -34,9 +43,20 @@ public class DetailFragment extends Fragment {
 
     private RecyclerView.Adapter mTrailerAdapter;
     private RecyclerView.Adapter mReviewAdapter;
+    private ShareActionProvider mShareActionProvider;
+    private List<Trailers> mTrailers;
 
     public DetailFragment() {
         // Required empty public constructor
+    }
+
+
+    private Intent createShareMoviesIntent() {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_TEXT,Constant.YOUTUBE_LINK+mTrailers.get(0).getKey() );
+        return shareIntent;
     }
 
 
@@ -50,6 +70,8 @@ public class DetailFragment extends Fragment {
         ImageView mPoster = (ImageView) view.findViewById(R.id.imageView_fdetail_poster);
         TextView mSynopsis = (TextView) view.findViewById(R.id.textView_fdetail_synopsis);
         RatingBar mUserRating = (RatingBar) view.findViewById(R.id.ratingBar_fdetail_user_rating);
+
+        setHasOptionsMenu(true);
 
         Bundle bundle = getActivity().getIntent().getExtras();
         Movies movies = bundle.getParcelable(Constant.INTENT_MAIN_MOVIE);
@@ -81,8 +103,13 @@ public class DetailFragment extends Fragment {
         rv.setLayoutManager(new LinearLayoutManager(getActivity()));
         rv.setHasFixedSize(true);
 
+        mTrailers = fetchDetail.getTrailers(String.valueOf(movies.getId()));
+        mTrailerAdapter = new TrailersAdapter(getActivity(),mTrailers);
 
-        mTrailerAdapter = new TrailersAdapter(getActivity(),fetchDetail.getTrailers(String.valueOf(movies.getId())));
+        if(mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(createShareMoviesIntent());
+        }
+
         rv.setAdapter(mTrailerAdapter);
 
         RecyclerView rvs = (RecyclerView) view.findViewById(R.id.review_container_recycler_view);
@@ -103,6 +130,23 @@ public class DetailFragment extends Fragment {
         });
 
         return view;
+
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        getActivity().getMenuInflater().inflate(R.menu.detailfragment, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.action_share);
+
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
+
+        if(mTrailers != null) {
+            mShareActionProvider.setShareIntent(createShareMoviesIntent());
+        }
+
 
     }
 

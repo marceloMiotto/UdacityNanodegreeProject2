@@ -35,4 +35,7 @@ public interface Constant {
     String INTENT_MAIN_MOVIE = "main movie";
     String INTENT_MENU_CHOOSE = "menu_choose";
 
+    //youtube
+    String YOUTUBE_LINK = "https://www.youtube.com/watch?v=";
+
 }
