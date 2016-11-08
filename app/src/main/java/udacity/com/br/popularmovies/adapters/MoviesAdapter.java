@@ -64,10 +64,12 @@ public class MoviesAdapter extends BaseAdapter {
 
 
         if (mMovies != null) {
-            //TODO remove condition
-            if (mChooseType.equals(mContext.getString(R.string.pref_order_favorite)) && 1==2) {
 
-                viewHolder.imageView.setImageBitmap(Utility.getImage(mMovies.get(position).getPosterImage()));
+            if (mChooseType.equals(mContext.getString(R.string.pref_order_favorite))) {
+
+               if(position < mMovies.size()) {
+                   viewHolder.imageView.setImageBitmap(Utility.getImage(mMovies.get(position).getPosterImage()));
+               }
 
             } else {
 

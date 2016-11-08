@@ -159,8 +159,8 @@ public class MainFragment extends Fragment {
         @Override
         protected List<Movies> doInBackground(String... params) {
 
-            //TODO remove condition
-            if(mPrefChoose.equals(getString(R.string.pref_order_favorite)) && 1==2){
+
+            if(mPrefChoose.equals(getString(R.string.pref_order_favorite))){
                 MoviesService moviesService = new MoviesService(getActivity());
                 return moviesService.getMovies();
 

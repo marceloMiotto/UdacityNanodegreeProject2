@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 import udacity.com.br.popularmovies.data.PopularMoviesContract.MovieEntry;
 
@@ -43,7 +42,8 @@ public class PopularMoviesProvider extends ContentProvider {
                                MovieEntry.COLUMN_MOVIE_RELEASE_DATE,
                                MovieEntry.COLUMN_MOVIE_RATING,
                                MovieEntry.COLUMN_MOVIE_REVIEW,
-                               MovieEntry.COLUMN_MOVIE_POSTER
+                               MovieEntry.COLUMN_MOVIE_POSTER,
+                               MovieEntry.COLUMN_MOVIE_ID
         };
 
         return sMoviesQueryBuilder.query(mOpenHelper.getReadableDatabase(),
@@ -62,9 +62,7 @@ public class PopularMoviesProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = PopularMoviesContract.CONTENT_AUTHORITY;
 
-        // For each type of URI you want to add, create a corresponding code.
         matcher.addURI(authority, PopularMoviesContract.PATH_FAVORITE_MOVIES, MOVIES);
-        matcher.addURI(authority, PopularMoviesContract.PATH_FAVORITE_MOVIES + "/*", MOVIES_WITH_ID);
 
         return matcher;
     }
@@ -99,10 +97,7 @@ public class PopularMoviesProvider extends ContentProvider {
         switch (sUriMatcher.match(uri)) {
 
             case MOVIES: {
-                Log.e("Debug2","Debug07 "+projection.toString());
-
                 retCursor = getMovies(projection, selection, selectionArgs, sortOrder);
-                Log.e("Debug2","Debug08 "+retCursor.getCount());
                 break;
             }
 
@@ -122,10 +117,7 @@ public class PopularMoviesProvider extends ContentProvider {
         switch (match) {
             case MOVIES:
                 return MovieEntry.CONTENT_TYPE;
-            case MOVIES_WITH_ID:
-                return MovieEntry.CONTENT_ITEM_TYPE;
             default:
-
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
     }
@@ -160,10 +152,7 @@ public class PopularMoviesProvider extends ContentProvider {
         int rowsDeleted;
 
         switch (match) {
-            case MOVIES_WITH_ID:
-                String movieId = MovieEntry.getMovieIDFromUri(uri);
-                selection = MovieEntry._ID +" = ?";
-                selectionArgs = new String[]{movieId};
+            case MOVIES:
                 rowsDeleted = db.delete(
                         MovieEntry.TABLE_NAME, selection, selectionArgs);
                 break;

@@ -72,8 +72,7 @@ public class FetchMoviesNetwork {
                         .authority(Constant.MOVIE_AUTHORITY)
                         .appendPath(Constant.LEVEL_PATH)
                         .appendPath(Constant.DATA_PATH)
-                        //.appendPath(orderMoviesBy) TODO remove comment
-                        .appendPath("top_rated")
+                        .appendPath(orderMoviesBy)
                         .appendQueryParameter(Constant.PAGE_PARAM, "1")
                         .appendQueryParameter(Constant.API_KEY_PARAM, BuildConfig.THE_MOVIE_DB_API_KEY);
 
@@ -168,7 +167,7 @@ public class FetchMoviesNetwork {
             String movieUserRating    = movies.getString(Constant.TMDB_USER_RATING);
             String movieSynopsis      = movies.getString(Constant.TMDB_SYNOPSIS);
 
-            mMoviesList.add(new Movies(moviePosterPath,movieOriginalTitle, moviePosterPath, movieSynopsis, movieUserRating, movieReleaseDate,Long.valueOf(movieId),null));
+            mMoviesList.add(new Movies(moviePosterPath,movieOriginalTitle, moviePosterPath, movieSynopsis, movieUserRating, movieReleaseDate,Long.valueOf(movieId),null,0));
 
         }
 

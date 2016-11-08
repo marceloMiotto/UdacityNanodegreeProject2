@@ -51,14 +51,14 @@ public class FetchDetailVideoReviewsNetwork {
 
     public List<Trailers> getTrailers(String movieId) {
 
-        try {
-            String trailers = getDetailVideoReviewList(movieId, "videos");
+        if(isConnected()) {
+            try {
+                String trailers = getDetailVideoReviewList(movieId, "videos");
+                return getTrailersDataFromJson(trailers);
 
-            Log.e("Debug2","trailers: "+trailers);
-            return getTrailersDataFromJson(trailers);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;
@@ -66,14 +66,14 @@ public class FetchDetailVideoReviewsNetwork {
 
 
     public List<Reviews> getReviews(String movieId) {
+        if(isConnected()) {
+            try {
+                String reviews = getDetailVideoReviewList(movieId, "reviews");
+                return getReviewsDataFromJson(reviews);
 
-        String reviews = getDetailVideoReviewList(movieId, "reviews");
-        try {
-
-            return getReviewsDataFromJson(reviews);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
 
         return null;

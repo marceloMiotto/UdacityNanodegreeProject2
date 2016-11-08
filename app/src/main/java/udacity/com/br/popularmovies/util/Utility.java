@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import java.io.ByteArrayOutputStream;
 
 public class Utility {
- //TODO verfiy if it is necessary
 
     // convert from bitmap to byte array
     public static byte[] getBytes(Bitmap bitmap) {

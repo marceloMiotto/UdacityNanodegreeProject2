@@ -13,11 +13,16 @@ public class Movies implements Parcelable {
     private String mReleaseDate;
     private long   mId;
     private byte[] mPosterImage;
+    private long   mSQLiteId;
 
     public Movies() {
     }
 
-    public Movies(String moviePosterThumbnail, String originalTitle, String moviePoster, String synopsis, String userRating, String releaseDate,long id, byte[] posterImage) {
+    public void setPosterImage(byte[] posterImage){
+        this.mPosterImage = posterImage;
+    }
+
+    public Movies(String moviePosterThumbnail, String originalTitle, String moviePoster, String synopsis, String userRating, String releaseDate,long id, byte[] posterImage, long SQLiteId) {
         this.mMoviePosterThumbnail = moviePosterThumbnail;
         this.mOriginalTitle = originalTitle;
         this.mMoviePoster = moviePoster;
@@ -26,6 +31,7 @@ public class Movies implements Parcelable {
         this.mReleaseDate = releaseDate;
         this.mId          = id;
         this.mPosterImage = posterImage;
+        this.mSQLiteId    = SQLiteId;
 
     }
 
@@ -38,6 +44,7 @@ public class Movies implements Parcelable {
         this.mReleaseDate = in.readString();
         this.mId          = in.readLong();
         this.mPosterImage = in.createByteArray();
+        this.mSQLiteId    = in.readLong();
 
     }
 
@@ -57,6 +64,7 @@ public class Movies implements Parcelable {
         dest.writeString(mReleaseDate);
         dest.writeLong(mId);
         dest.writeByteArray(mPosterImage);
+        dest.writeLong(mSQLiteId);
 
 
     }
@@ -84,6 +92,14 @@ public class Movies implements Parcelable {
 
     public byte[] getPosterImage(){
         return this.mPosterImage;
+    }
+
+    public long getSQLId(){
+        return this.mSQLiteId;
+    }
+
+    public void setSQLiteId(long id){
+        this.mSQLiteId = id;
     }
 
     public long getId(){
