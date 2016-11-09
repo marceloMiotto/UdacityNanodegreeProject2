@@ -21,8 +21,8 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.DataObje
 
 public class DataObjectHolder extends RecyclerView.ViewHolder  {
 
-    TextView reviewName;
-    TextView reviewContent;
+    final TextView reviewName;
+    final TextView reviewContent;
 
 
 

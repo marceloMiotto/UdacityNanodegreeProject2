@@ -2,7 +2,6 @@ package udacity.com.br.popularmovies.fragments;
 
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,17 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
 
-import udacity.com.br.popularmovies.DetailActivity;
 import udacity.com.br.popularmovies.R;
 import udacity.com.br.popularmovies.adapters.MoviesAdapter;
 import udacity.com.br.popularmovies.model.Movies;
 import udacity.com.br.popularmovies.network.FetchMoviesNetwork;
 import udacity.com.br.popularmovies.services.MoviesService;
-import udacity.com.br.popularmovies.util.Constant;
 
 
 public class MainFragment extends Fragment {
@@ -36,7 +34,8 @@ public class MainFragment extends Fragment {
     private Movies movie;
     private TextView mNoConnectionMsg;
     private String mPrefChoose;
-
+    private int mPosition = ListView.INVALID_POSITION;
+    private static final String SELECTED_KEY = "selected_position";
 
     public MainFragment() {
         // Required empty public constructor
@@ -60,14 +59,17 @@ public class MainFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 movie =  mMoviesAdapter.getMovie(position);
-
-                Intent intent = new Intent(getActivity(), DetailActivity.class);
-                intent.putExtra(Constant.INTENT_MAIN_MOVIE,movie);
-                intent.putExtra(Constant.INTENT_MENU_CHOOSE,mPrefChoose);
-                startActivity(intent);
+                ((Callback) getActivity())
+                        .onItemSelected(movie,mPrefChoose );
+                mPosition = position;
             }
         });
 
+        if (savedInstanceState != null && savedInstanceState.containsKey(SELECTED_KEY)) {
+            // The listview probably hasn't even been populated yet.  Actually perform the
+            // swapout in onLoadFinished.
+            mPosition = savedInstanceState.getInt(SELECTED_KEY);
+        }
 
         return view;
     }
@@ -106,6 +108,14 @@ public class MainFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mPosition != ListView.INVALID_POSITION) {
+            outState.putInt(SELECTED_KEY, mPosition);
+        }
+        super.onSaveInstanceState(outState);
+    }
+
 
     @Override
     public void onStart() {
@@ -118,6 +128,13 @@ public class MainFragment extends Fragment {
         FetchMoviesTask fetchMoviesTask = new FetchMoviesTask(getActivity());
         fetchMoviesTask.execute();
     }
+
+    public interface Callback {
+
+        void onItemSelected(Movies movies, String prefChosen);
+    }
+
+
 
 
     @SuppressWarnings("WeakerAccess")
@@ -148,7 +165,7 @@ public class MainFragment extends Fragment {
 
             } else {
                 mNoConnectionMsg.setVisibility(View.GONE);
-                mMoviesAdapter = new MoviesAdapter(mContext, 20, movies,mPrefChoose);
+                mMoviesAdapter = new MoviesAdapter(mContext, movies,mPrefChoose);
                 mMoviesAdapter.notifyDataSetChanged();
                 mPostersGridView.setAdapter(mMoviesAdapter);
             }

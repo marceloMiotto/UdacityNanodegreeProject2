@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -91,6 +92,12 @@
                 android:textAppearance="?android:attr/textAppearanceMedium"
                 tools:text="test" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/color_line_separator"
+                />
+
 
             <TextView
                 android:id="@+id/textView_trailer_title"
@@ -102,6 +109,10 @@
 
             <include layout="@layout/activity_detail_trailer_recycler_view" />
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/color_line_separator"/>
 
             <TextView
                 android:id="@+id/textView_review_title"
@@ -127,9 +138,10 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end|right"
+        android:layout_gravity="bottom|end"
         android:clickable="true"
         android:elevation="8dp"
-        android:src="@drawable/star_remove" />
+        android:src="@drawable/star_remove"
+        tools:ignore="UnusedAttribute" />
 
 </FrameLayout>

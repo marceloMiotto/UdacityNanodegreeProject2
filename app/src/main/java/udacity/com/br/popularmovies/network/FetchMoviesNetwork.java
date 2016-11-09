@@ -1,5 +1,6 @@
 package udacity.com.br.popularmovies.network;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -134,8 +135,8 @@ public class FetchMoviesNetwork {
 
     private String getReadableDateString(String time) {
 
-        SimpleDateFormat fromDate = new SimpleDateFormat("yyyy-mm-dd");
-        SimpleDateFormat toDate   = new SimpleDateFormat("mm-dd-yyyy");
+         @SuppressLint("SimpleDateFormat") SimpleDateFormat fromDate = new SimpleDateFormat("yyyy-mm-dd");
+         @SuppressLint("SimpleDateFormat") SimpleDateFormat toDate   = new SimpleDateFormat("mm-dd-yyyy");
 
         try{
             return toDate.format(fromDate.parse(time));

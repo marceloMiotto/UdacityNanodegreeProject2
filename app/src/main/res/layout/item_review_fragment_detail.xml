@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         tools:text="test"
         android:text="@string/name_review_item"
         android:textAppearance="?android:attr/textAppearanceLarge" />

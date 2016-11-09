@@ -80,7 +80,7 @@ public class FetchDetailVideoReviewsNetwork {
 
     }
 
-    public String getDetailVideoReviewList(String movieId, String videoReviewType) {
+    private String getDetailVideoReviewList(String movieId, String videoReviewType) {
 
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;

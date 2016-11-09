@@ -23,7 +23,7 @@ public class TrailersAdapter extends RecyclerView.Adapter<TrailersAdapter.DataOb
 
     public class DataObjectHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        Button trailerButton;
+        final Button trailerButton;
 
         public DataObjectHolder(View itemView) {
             super(itemView);

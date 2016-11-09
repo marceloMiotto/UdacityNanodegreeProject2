@@ -41,11 +41,8 @@ import udacity.com.br.popularmovies.util.Utility;
 public class DetailFragment extends Fragment {
 
 
-    private RecyclerView.Adapter mTrailerAdapter;
-    private RecyclerView.Adapter mReviewAdapter;
     private ShareActionProvider mShareActionProvider;
     private List<Trailers> mTrailers;
-    private List<Reviews> mReviews;
     private String mMenuChoose;
     private Movies movies;
     private ImageView mPoster;
@@ -57,6 +54,7 @@ public class DetailFragment extends Fragment {
 
     private Intent createShareMoviesIntent() {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        //noinspection deprecation
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
         shareIntent.setType("text/plain");
         shareIntent.putExtra(Intent.EXTRA_TEXT,Constant.YOUTUBE_LINK+mTrailers.get(0).getKey() );
@@ -68,6 +66,19 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
+
+        Bundle arguments = getArguments();
+        if (arguments != null) {
+            movies = arguments.getParcelable(Constant.INTENT_MAIN_MOVIE);
+            mMenuChoose = arguments.getString(Constant.INTENT_MENU_CHOOSE);
+        }else{
+            Bundle bundle = getActivity().getIntent().getExtras();
+            if(bundle != null) {
+                movies = bundle.getParcelable(Constant.INTENT_MAIN_MOVIE);
+                mMenuChoose = getActivity().getIntent().getStringExtra(Constant.INTENT_MENU_CHOOSE);
+            }
+        }
+
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         TextView mOriginalTitle = (TextView) view.findViewById(R.id.textView_fdetail_original_title);
         TextView mReleaseDate = (TextView) view.findViewById(R.id.textView_fdetail_release_date);
@@ -75,17 +86,13 @@ public class DetailFragment extends Fragment {
         TextView mSynopsis = (TextView) view.findViewById(R.id.textView_fdetail_synopsis);
         RatingBar mUserRating = (RatingBar) view.findViewById(R.id.ratingBar_fdetail_user_rating);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.trailer_container_recycler_view);
-        RecyclerView recyclerView1 = (RecyclerView) view.findViewById(R.id.review_container_recycler_view);
-
         TextView textViewTrailer = (TextView) view.findViewById(R.id.textView_trailer_title);
         TextView textViewReview = (TextView) view.findViewById(R.id.textView_review_title);
 
         setHasOptionsMenu(true);
 
-        Bundle bundle = getActivity().getIntent().getExtras();
-        movies = bundle.getParcelable(Constant.INTENT_MAIN_MOVIE);
-        mMenuChoose = getActivity().getIntent().getStringExtra(Constant.INTENT_MENU_CHOOSE);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         if (movies != null) {
 
@@ -96,90 +103,87 @@ public class DetailFragment extends Fragment {
             mUserRating.setMax(10);
             mUserRating.setRating(Float.valueOf(movies.getUserRating()) / 2);
 
-            if(mMenuChoose.equals(getActivity().getString(R.string.pref_order_favorite))){
+            if (mMenuChoose.equals(getActivity().getString(R.string.pref_order_favorite))) {
                 mPoster.setImageBitmap(Utility.getImage(movies.getPosterImage()));
-            }else{
+            } else {
                 Picasso.with(getActivity()).load(Constant.TMDB_POSTER_IMG + movies.getMoviePoster()).into(mPoster);
             }
 
-        }
 
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
+            FetchDetailVideoReviewsNetwork fetchDetail = new FetchDetailVideoReviewsNetwork(getActivity());
 
-        FetchDetailVideoReviewsNetwork fetchDetail = new FetchDetailVideoReviewsNetwork(getActivity());
+            RecyclerView rv = (RecyclerView) view.findViewById(R.id.trailer_container_recycler_view);
+            rv.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rv.setHasFixedSize(true);
 
-        RecyclerView rv = (RecyclerView) view.findViewById(R.id.trailer_container_recycler_view);
-        rv.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rv.setHasFixedSize(true);
+            mTrailers = fetchDetail.getTrailers(String.valueOf(movies.getId()));
+            if (mTrailers != null) {
+                RecyclerView.Adapter mTrailerAdapter = new TrailersAdapter(getActivity(), mTrailers);
 
-        mTrailers = fetchDetail.getTrailers(String.valueOf(movies.getId()));
-        if(mTrailers != null) {
-            mTrailerAdapter = new TrailersAdapter(getActivity(), mTrailers);
-
-            if (mShareActionProvider != null) {
-                mShareActionProvider.setShareIntent(createShareMoviesIntent());
+                if (mShareActionProvider != null && mTrailers.size()>0) {
+                    mShareActionProvider.setShareIntent(createShareMoviesIntent());
+                }
+                rv.setAdapter(mTrailerAdapter);
+            } else {
+                rv.setVisibility(View.GONE);
+                textViewTrailer.setVisibility(View.GONE);
             }
-            rv.setAdapter(mTrailerAdapter);
-        }else{
-            recyclerView.setVisibility(View.GONE);
-            textViewTrailer.setVisibility(View.GONE);
-        }
 
 
-        RecyclerView rvs = (RecyclerView) view.findViewById(R.id.review_container_recycler_view);
-        rvs.setLayoutManager(new LinearLayoutManager(getActivity()));
-        rvs.setHasFixedSize(true);
+            RecyclerView rvs = (RecyclerView) view.findViewById(R.id.review_container_recycler_view);
+            rvs.setLayoutManager(new LinearLayoutManager(getActivity()));
+            rvs.setHasFixedSize(true);
 
-        mReviews = fetchDetail.getReviews(String.valueOf(movies.getId()));
-        if(mReviews != null) {
-            mReviewAdapter = new ReviewsAdapter(getActivity(), mReviews);
-            rvs.setAdapter(mReviewAdapter);
-        }else{
-            recyclerView1.setVisibility(View.GONE);
-            textViewReview.setVisibility(View.GONE);
-        }
+            List<Reviews> mReviews = fetchDetail.getReviews(String.valueOf(movies.getId()));
+            if (mReviews != null) {
+                RecyclerView.Adapter mReviewAdapter = new ReviewsAdapter(getActivity(), mReviews);
+                rvs.setAdapter(mReviewAdapter);
+            } else {
+                rvs.setVisibility(View.GONE);
+                textViewReview.setVisibility(View.GONE);
+            }
 
 
+            FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+            if (mMenuChoose.equals(getActivity().getString(R.string.pref_order_favorite))) {
+                fab.setImageResource(R.drawable.star_remove);
+            } else {
+                fab.setImageResource(R.drawable.star_add);
+            }
+            fab.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    long result;
+                    MoviesService moviesService = new MoviesService(getActivity());
 
-        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
-        if(mMenuChoose.equals(getActivity().getString(R.string.pref_order_favorite))){
-           fab.setImageResource(R.drawable.star_remove);
-        }else{
-            fab.setImageResource(R.drawable.star_add);
-        }
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                long result;
-                MoviesService moviesService = new MoviesService(getActivity());
+                    if (mMenuChoose.equals(getActivity().getString(R.string.pref_order_favorite))) {
+                        //Remove
+                        result = moviesService.removeMovieFromFavorite(getActivity(), PopularMoviesContract.MovieEntry._ID + " = ?", new String[]{String.valueOf(movies.getSQLId())});
+                        if (result > 0) {
+                            Toast.makeText(getActivity(), R.string.msg_removed_success, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), R.string.msg_not_removed, Toast.LENGTH_SHORT).show();
+                        }
 
-                if(mMenuChoose.equals(getActivity().getString(R.string.pref_order_favorite))){
-                   //Remove
-                    result = moviesService.removeMovieFromFavorite(getActivity(),PopularMoviesContract.MovieEntry._ID +" = ?",new String[]{String.valueOf(movies.getSQLId())});
-                    if(result > 0) {
-                        Toast.makeText(getActivity(), R.string.msg_removed_success, Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(getActivity(), R.string.msg_not_removed, Toast.LENGTH_SHORT).show();
-                    }
+                    } else {
+                        //Add
+                        movies.setPosterImage(Utility.getBytes(((BitmapDrawable) mPoster.getDrawable()).getBitmap()));
+                        result = moviesService.addMovieToFavorite(getActivity(), movies);
+                        if (result < 0) {
+                            Toast.makeText(getActivity(), R.string.msg_favorite_already, Toast.LENGTH_SHORT).show();
+                        } else if (result == 0) {
+                            Toast.makeText(getActivity(), R.string.msg_error_saving_to_favorite, Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getActivity(), R.string.msg_saved_to_favorite, Toast.LENGTH_SHORT).show();
+                        }
 
-                }else{
-                   //Add
-                    movies.setPosterImage(Utility.getBytes(((BitmapDrawable)mPoster.getDrawable()).getBitmap()));
-                    result = moviesService.addMovieToFavorite(getActivity(),movies);
-                    if(result < 0) {
-                        Toast.makeText(getActivity(), R.string.msg_favorite_already, Toast.LENGTH_SHORT).show();
-                    } else if(result == 0){
-                        Toast.makeText(getActivity(), R.string.msg_error_saving_to_favorite, Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(getActivity(), R.string.msg_saved_to_favorite, Toast.LENGTH_SHORT).show();
                     }
 
                 }
-            }
 
-        });
+            });
 
+        }
         return view;
     }
 
@@ -193,7 +197,7 @@ public class DetailFragment extends Fragment {
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(menuItem);
 
 
-        if(mTrailers != null) {
+        if(mTrailers != null && mTrailers.size()>0) {
             mShareActionProvider.setShareIntent(createShareMoviesIntent());
         }
 

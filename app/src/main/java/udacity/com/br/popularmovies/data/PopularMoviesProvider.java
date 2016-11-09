@@ -8,9 +8,11 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import udacity.com.br.popularmovies.data.PopularMoviesContract.MovieEntry;
+
 
 public class PopularMoviesProvider extends ContentProvider {
 
@@ -18,7 +20,7 @@ public class PopularMoviesProvider extends ContentProvider {
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private PopularMoviesDbHelper mOpenHelper;
 
-    static final int MOVIES = 100;
+    private static final int MOVIES = 100;
     static final int MOVIES_WITH_ID = 101;
 
     private static final SQLiteQueryBuilder sMoviesQueryBuilder;
@@ -57,7 +59,7 @@ public class PopularMoviesProvider extends ContentProvider {
     }
 
 
-    static UriMatcher buildUriMatcher() {
+    private static UriMatcher buildUriMatcher() {
 
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = PopularMoviesContract.CONTENT_AUTHORITY;
@@ -79,20 +81,18 @@ public class PopularMoviesProvider extends ContentProvider {
 
     private Cursor getMovies(String[] projection, String selection, String[] selectionArgs, String sortOrder){
 
-        Cursor moviesCursor = sMoviesQueryBuilder.query(sqLiteDatabase,
+        return sMoviesQueryBuilder.query(sqLiteDatabase,
                 projection,
                 selection,
                 selectionArgs,
                 null,
                 null,
                 sortOrder);
-
-        return moviesCursor;
     }
 
     @Nullable
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
         switch (sUriMatcher.match(uri)) {
 
@@ -104,13 +104,14 @@ public class PopularMoviesProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        //noinspection ConstantConditions
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
         return retCursor;
     }
 
 
     @Override
-    public String getType(Uri uri) {
+    public String getType(@NonNull Uri uri) {
 
         final int match = sUriMatcher.match(uri);
 
@@ -124,7 +125,7 @@ public class PopularMoviesProvider extends ContentProvider {
 
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
@@ -141,12 +142,13 @@ public class PopularMoviesProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
+        //noinspection ConstantConditions
         getContext().getContentResolver().notifyChange(uri, null);
         return returnUri;
     }
 
     @Override
-    public int delete(Uri uri,String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
@@ -161,13 +163,14 @@ public class PopularMoviesProvider extends ContentProvider {
         }
 
         if (rowsDeleted != 0) {
+            //noinspection ConstantConditions
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsDeleted;
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         return 0;
     }
 

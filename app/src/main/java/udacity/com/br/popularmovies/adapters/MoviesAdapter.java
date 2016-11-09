@@ -23,10 +23,10 @@ public class MoviesAdapter extends BaseAdapter {
     private final List<Movies> mMovies;
     private final String mChooseType;
 
-    public MoviesAdapter(Context c,  int moviesCount, List<Movies> moviesArray, String chooseType) {
+    public MoviesAdapter(Context c, List<Movies> moviesArray, String chooseType) {
 
         mContext = c;
-        mMoviesCount = moviesCount;
+        mMoviesCount = 20;
         mMovies      = moviesArray;
         mChooseType  = chooseType;
 

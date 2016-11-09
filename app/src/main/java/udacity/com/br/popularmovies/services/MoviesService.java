@@ -16,7 +16,7 @@ import udacity.com.br.popularmovies.model.Movies;
 public class MoviesService {
 
 
-    private Context mContext;
+    private final Context mContext;
 
     public MoviesService(Context context){
         this.mContext = context;
@@ -62,18 +62,17 @@ public class MoviesService {
 
     public int removeMovieFromFavorite(Context context,String projection, String[] projectionArgs){
 
-        int movieRemoved = context.getContentResolver().delete(
+        return context.getContentResolver().delete(
                 MovieEntry.CONTENT_URI,
                 projection,
                 projectionArgs
         );
-        return movieRemoved;
     }
 
     public long addMovieToFavorite(Context context, Movies movie) {
 
 
-        long movieId = 0;
+        long movieId;
 
         Cursor movieCursor = context.getContentResolver().query(
                 MovieEntry.CONTENT_URI,
