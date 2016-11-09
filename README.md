@@ -1,1 +1,1 @@
-The authentication key from site "The Movies DB" should be supplied on file gradle.properties MyTheMovieDBApiKey=<"??">
+The authentication key from site "The Movies DB" should be supplied on file gradle.properties MyTheMovieDBApiKey=<"?">
